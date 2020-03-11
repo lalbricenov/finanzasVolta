@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>FINANZAS VOLTA</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <h1 id="finanzas-volta">FINANZAS VOLTA</h1>
+<p>Implemente un sitio web en el que los usuarios puedan &quot;comprar&quot; y &quot;vender&quot; acciones, como se muestra a continuación.</p>
+<h2 id="introducci%c3%93n">INTRODUCCIÓN</h2>
+<p>Si no está del todo seguro sobre lo que quiere decir comprar y vender acciones, haga click <a href="http://www.investopedia.com/university/stocks/">aquí</a></p>
+<p>Está por implementar Finanzas Volta, una aplicaicón web por medio de la cual puede manejar portafolios de acciones. Esta herramienta no sólo le permitirá revisar el precio actual de acciones, también le permitirá comprar (&quot;comprar&quot;) y vender (&quot;vender&quot;) acciones consultando <a href="https://iextrading.com/developer/">IEX</a>.</p>
+<p>De hecho, IEX le permite descargar información de acciones a través de su API (applicacion programming interface) usando URLs como <code>https://cloud-sse.iexapis.com/stable/stock/nflx/quote?token=API_KEY</code>. Note que el símbolo de Netflix (NFLX) está embebido en esta URL; esa es la manera en la que IEX sabe qué datos devolver. Este link en particular no devuelve ningún dato porque IEX solicita que usted use una clave API (más sobre esto dentro de poco), pero si lo hiciera, veria una respuesta en formato JSON (JavaScript Object Notation) como esta:</p>
+<pre><code class="language-javascript"><div>{  
+   <span class="hljs-string">"symbol"</span>: <span class="hljs-string">"NFLX"</span>,
+   <span class="hljs-string">"companyName"</span>: <span class="hljs-string">"Netflix, Inc."</span>,
+   <span class="hljs-string">"primaryExchange"</span>: <span class="hljs-string">"NASDAQ"</span>,
+   <span class="hljs-string">"calculationPrice"</span>: <span class="hljs-string">"close"</span>,
+   <span class="hljs-string">"open"</span>: <span class="hljs-number">317.49</span>,
+   <span class="hljs-string">"openTime"</span>: <span class="hljs-number">1564752600327</span>,
+   <span class="hljs-string">"close"</span>: <span class="hljs-number">318.83</span>,
+   <span class="hljs-string">"closeTime"</span>: <span class="hljs-number">1564776000616</span>,
+   <span class="hljs-string">"high"</span>: <span class="hljs-number">319.41</span>,
+   <span class="hljs-string">"low"</span>: <span class="hljs-number">311.8</span>,
+   <span class="hljs-string">"latestPrice"</span>: <span class="hljs-number">318.83</span>,
+   <span class="hljs-string">"latestSource"</span>: <span class="hljs-string">"Close"</span>,
+   <span class="hljs-string">"latestTime"</span>: <span class="hljs-string">"August 2, 2019"</span>,
+   <span class="hljs-string">"latestUpdate"</span>: <span class="hljs-number">1564776000616</span>,
+   <span class="hljs-string">"latestVolume"</span>: <span class="hljs-number">6232279</span>,
+   <span class="hljs-string">"iexRealtimePrice"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"iexRealtimeSize"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"iexLastUpdated"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"delayedPrice"</span>: <span class="hljs-number">318.83</span>,
+   <span class="hljs-string">"delayedPriceTime"</span>: <span class="hljs-number">1564776000616</span>,
+   <span class="hljs-string">"extendedPrice"</span>: <span class="hljs-number">319.37</span>,
+   <span class="hljs-string">"extendedChange"</span>: <span class="hljs-number">0.54</span>,
+   <span class="hljs-string">"extendedChangePercent"</span>: <span class="hljs-number">0.00169</span>,
+   <span class="hljs-string">"extendedPriceTime"</span>: <span class="hljs-number">1564876784244</span>,
+   <span class="hljs-string">"previousClose"</span>: <span class="hljs-number">319.5</span>,
+   <span class="hljs-string">"previousVolume"</span>: <span class="hljs-number">6563156</span>,
+   <span class="hljs-string">"change"</span>: <span class="hljs-number">-0.67</span>,
+   <span class="hljs-string">"changePercent"</span>: <span class="hljs-number">-0.0021</span>,
+   <span class="hljs-string">"volume"</span>: <span class="hljs-number">6232279</span>,
+   <span class="hljs-string">"iexMarketPercent"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"iexVolume"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"avgTotalVolume"</span>: <span class="hljs-number">7998833</span>,
+   <span class="hljs-string">"iexBidPrice"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"iexBidSize"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"iexAskPrice"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"iexAskSize"</span>: <span class="hljs-literal">null</span>,
+   <span class="hljs-string">"marketCap"</span>: <span class="hljs-number">139594933050</span>,
+   <span class="hljs-string">"peRatio"</span>: <span class="hljs-number">120.77</span>,
+   <span class="hljs-string">"week52High"</span>: <span class="hljs-number">386.79</span>,
+   <span class="hljs-string">"week52Low"</span>: <span class="hljs-number">231.23</span>,
+   <span class="hljs-string">"ytdChange"</span>: <span class="hljs-number">0.18907500000000002</span>,
+   <span class="hljs-string">"lastTradeTime"</span>: <span class="hljs-number">1564776000616</span>
+}
+</div></code></pre>
+<p>Note que esto es como un objeto de javascript, con parejas de propiedades y valores separadas por comas.</p>
+<h2 id="c%c3%b3digo-base">Código base</h2>
+<h3 id="descargando">Descargando</h3>
+<p>ACÁ FALTA PONER MÁS INFORMACIÓN</p>
+<h3 id="configurando">Configurando</h3>
+<p>Antes de comenzar con la tarea, necesitaremos registrarnos para obtener una clave API para poder consultar datos en IEX. Para hacerlo siga estos pasos:</p>
+<ul>
+<li>Visite <a href="iexcloud.io/cloud-login#/register/">iexcloud.io/cloud-login#/register/</a>.</li>
+<li>Ingrese su correo (no use el correo del colegio) y su contraseña, y haga click en &quot;Create account&quot;.</li>
+<li>Seleccione el plan gratuito <img src="file:///g:\Shared drives\INFORMATICA LICEO\PROGRAMMAZIONI\4 Liceo\2 NodeJS and mongodb\voltaFinanzas\IEX.PNG" alt="selección plan IEX" title="Selección plan IEX"></li>
+<li>Una vez que haya confirmado su cuenta a través del email de confirmación, <a href="iexcloud.io"></a>.</li>
+<li>Click API Tokens.</li>
+<li>Copie la clave que aparece, debería comenzar con pk_.</li>
+<li>In a terminal window within CS50 IDE, execute:
+ACÁ FALTA ESCRIBIR BIEN ESTE COMANDO *****************************************************************</li>
+</ul>
+<pre><code class="language-bash"><div><span class="hljs-built_in">export</span> API_KEY=value
+</div></code></pre>
+<p>donde <code>value</code> es el valor pegado, sin espacios inmediatamente antes o después del <code>=</code>. También debería guardar esta clave en algún archivo de texto, en caso de que la necesite después.</p>
+<h3 id="corriendo">Corriendo</h3>
+<p>Inicie la aplicación con el comando <code>npm run dev</code></p>
+<h3 id="entendiendo">Entendiendo</h3>
+<h4 id="appjs"><code>app.js</code></h4>
+<p>EXPLICAR QUÉ HAY EN CADA ARCHIVO</p>
+<h4 id="helpersjs"><code>helpers.js</code></h4>
+<p>EXPLICAR QUÉ HAY EN CADA ARCHIVO</p>
+<h4 id="requirementstxt"><code>requirements.txt</code></h4>
+<p>EXPLICAR QUÉ HAY EN CADA ARCHIVO</p>
+<h4 id="static"><code>static/</code></h4>
+<p>EXPLICAR QUÉ HAY EN CADA ARCHIVO</p>
+<h4 id="views"><code>views/</code></h4>
+<p>EXPLICAR QUÉ HAY EN CADA ARCHIVO</p>
+<h4 id="routes"><code>routes/</code></h4>
+<p>EXPLICAR QUÉ HAY EN CADA ARCHIVO</p>
+<h4 id="models"><code>models/</code></h4>
+<p>EXPLICAR QUÉ HAY EN CADA ARCHIVO</p>
+<h2 id="especificaci%c3%b3n">Especificación</h2>
+
+    </body>
+    </html>

@@ -57,10 +57,63 @@ Note que esto es como un objeto de javascript, con parejas de propiedades y valo
 ### Descargando
 ACÁ FALTA PONER MÁS INFORMACIÓN
 ### Configurando
+#### IEX
 Antes de comenzar con la tarea, necesitaremos registrarnos para obtener una clave API para poder consultar datos en IEX. Para hacerlo siga estos pasos:
-* Visite (iexcloud.io/cloud-login#/register/).
+* Visite [iexcloud.io/cloud-login#/register/](iexcloud.io/cloud-login#/register/).
 * Ingrese su correo (no use el correo del colegio) y su contraseña, y haga click en "Create account".
-* Una vez que haya confirmado su cuenta a través del email de confirmación, inicie sesión en Once you’ve confirmed your account via a confirmation email, sign in to iexcloud.io.
+* Seleccione el plan gratuito ![selección plan IEX](IEX.PNG "Selección plan IEX")
+* Una vez que haya confirmado su cuenta a través del email de confirmación, [](iexcloud.io).
 * Click API Tokens.
-* Copy the key that appears under the Token column (it should begin with pk_).
+* Copie la clave que aparece, debería comenzar con pk_.
 * In a terminal window within CS50 IDE, execute:
+ACÁ FALTA ESCRIBIR BIEN ESTE COMANDO *****************************************************************
+```bash
+export API_KEY=value
+```
+donde `value` es el valor pegado, sin espacios inmediatamente antes o después del `=`. También debería guardar esta clave en algún archivo de texto, en caso de que la necesite después.
+
+#### MONGODB ATLAS
+Para manejar más fácilmente las bases de datos vamos a usar un servicio de DBaaS (DataBase As A Service).
+* Vaya a la página de inicio de [mongodb atlas](https://www.mongodb.com/cloud/atlas) y haga click en start free.
+* Cree su cuenta, no use el correo del colegio.
+* Al iniciar sesión escoja la opción gratuita ![selección cluster](clusterType.PNG "selección cluster")
+### Corriendo
+Inicie la aplicación con el comando `npm run dev`
+### Entendiendo
+
+#### `app.js`
+
+EXPLICAR QUÉ HAY EN CADA ARCHIVO
+
+#### `helpers.js`
+
+EXPLICAR QUÉ HAY EN CADA ARCHIVO
+
+#### `requirements.txt`
+
+EXPLICAR QUÉ HAY EN CADA ARCHIVO
+
+#### `static/`
+
+EXPLICAR QUÉ HAY EN CADA ARCHIVO
+
+#### `views/`
+
+EXPLICAR QUÉ HAY EN CADA ARCHIVO
+
+#### `routes/`
+
+EXPLICAR QUÉ HAY EN CADA ARCHIVO
+
+#### `models/`
+
+EXPLICAR QUÉ HAY EN CADA ARCHIVO
+
+## Especificación
+
+### `registrar`
+Complete la implementación de `register` de manera que permita al usuario resitrarse a través del formulario.
+* Requiera que el usuario ingrese un nombre de usuario, implementado como un campo de texto de `name` `username`. Envié una disculpa si el nombre de usuario es vacío o si el usuario ya existe.
+* Requiera que el usuario ingrese una contraseña, implementada como un campo de texto con `name` `password`, y luego la misma contraseña otra vez, implementada como un campo de texto con `name` `confirmation`. Envié una disculpa si alguno de los campos es vacío o si no coinciden.
+* 
+
