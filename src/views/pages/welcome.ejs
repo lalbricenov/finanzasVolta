@@ -1,0 +1,27 @@
+<%- include('../partials/headerWONav'); %>
+<style>
+
+    #formForCardN1{
+        /* justify-items: center; */
+        border: solid 2px lightgray;
+        border-radius: 5px;
+        padding:30px;
+    }
+
+    
+    </style>
+<div class="smallCentered">    
+    <form action="login" method="post" id="formForCardN1">
+        <div class="infoInForm">
+            <img src="/static/favicon.ico" height="60px" alt="Volta">
+            <h2>Finanzas Volta</h2>
+        </div>
+        <a href="/users/login" type="submit" type="button" class="btn btn-primary btn-lg btn-block">Iniciar 
+
+        sesión</a>
+        <a href="/users/register" type="button" class="btn btn-secondary btn-lg btn-block">Registrarse</a>
+        
+
+      </form>
+</div>
+<%- include('../partials/footer'); %>

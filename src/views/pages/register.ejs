@@ -1,0 +1,63 @@
+<%- include('../partials/headerWONav'); %>
+<style>
+
+    #formForCardN1{
+        /* justify-items: center; */
+        border: solid 2px lightgray;
+        border-radius: 5px;
+        padding:30px;
+    }
+
+    
+    </style>
+    <div class="smallCentered"> 
+        
+        <form action="register" method="post" id="formForCardN1">
+            <div class="infoInForm">
+                <img src="/static/favicon.ico" height="60px" alt="Volta">
+                <h2>Finanzas Volta</h2>
+                <h4>Registrarse</h4>
+            </div>
+            <% if(typeof errors != 'undefined')for(error of errors) {%> 
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <%= error.msg %> 
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                <% } %> 
+            <div class="fieldsInForm">
+                <div class="form-group">
+                    <label for="name">Nombre
+                    </label>
+                    <input type="text" class="form-control" id="name" name="name" required
+                    value="<%=(typeof user != 'undefined' && typeof user.name != 'undefined')?user.name:''%>">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email
+                    </label>
+                    <input type="email" class="form-control" id="email" name="email" required
+                    value="<%=(typeof user != 'undefined' && typeof user.email != 'undefined')?user.email:''%>">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña
+                    </label>
+                    <input type="password" class="form-control" id="password" name="password" required 
+                    value="<%=(typeof user != 'undefined' && typeof user.password != 'undefined')?user.password:''%>">
+                </div>
+                <div class="form-group">
+                    <label for="passwordConf">Confirmar contraseña
+                    </label>
+                    <input type="password" class="form-control" id="passwordConf" name="passwordConf" required 
+                    value="<%=(typeof user != 'undefined' && typeof user.passwordConf != 'undefined')?user.passwordConf:''%>">
+                </div>
+    
+                <button type="submit" class="btn btn-primary">Registrarse</button>
+                <br>
+                ¿Ya tiene una cuenta? <a href="login">Iniciar sesión</a>
+            </div>
+          </form>
+    </div>
+    
+<%- include('../partials/footer'); %>

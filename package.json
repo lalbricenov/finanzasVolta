@@ -1,19 +1,32 @@
 {
   "name": "voltafinanzas",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "Implemente un sitio web en el que los usuarios puedan \"comprar\" y \"vender\" acciones, como se muestra a continuación.\r ## INTRODUCCIÓN\r Si no está del todo seguro sobre lo que quiere decir comprar y vender acciones, haga click [aquí](http://www.investopedia.com/university/stocks/ )",
+  "main": "./src/app.js",
   "scripts": {
+    "dev": "nodemon ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lalbricenov/finanzasVolta.git"
   },
   "author": "Volta",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lalbricenov/finanzasVolta/issues"
+  },
+  "homepage": "https://github.com/lalbricenov/finanzasVolta#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "mongoose": "^5.9.4",
+    "path": "^0.12.7",
+    "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
     "morgan": "^1.9.1",
-    "nodemon": "^2.0.2",
-    "path": "^0.12.7"
+    "nodemon": "^2.0.2"
   }
 }

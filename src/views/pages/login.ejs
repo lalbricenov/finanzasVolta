@@ -1,0 +1,39 @@
+<%- include('../partials/headerWONav'); %>
+<style>
+
+    #formForCardN1{
+        /* justify-items: center; */
+        border: solid 2px lightgray;
+        border-radius: 5px;
+        padding:30px;
+    }
+
+    
+    </style>
+    <div class="smallCentered">    
+        <form action="login" method="post" id="formForCardN1">
+            <div class="infoInForm">
+                <img src="/static/favicon.ico" height="60px" alt="Volta">
+                <h2>Finanzas Volta</h2>
+                <h4>Iniciar sesión</h4>
+            </div>
+            <div>
+                <div class="form-group">
+                <label for="email">Email
+                </label>
+                <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                <label for="password">Contraseña
+                </label>
+                <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+    
+                <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                <br>
+                ¿No tiene una cuenta? <a href="register">Registrarse</a>
+            </div>
+          </form>
+    </div>
+    
+<%- include('../partials/footer'); %>

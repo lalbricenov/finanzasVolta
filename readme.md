@@ -62,7 +62,7 @@ Antes de comenzar con la tarea, necesitaremos registrarnos para obtener una clav
 * Visite [iexcloud.io/cloud-login#/register/](iexcloud.io/cloud-login#/register/).
 * Ingrese su correo (no use el correo del colegio) y su contraseña, y haga click en "Create account".
 * Seleccione el plan gratuito ![selección plan IEX](IEX.PNG "Selección plan IEX")
-* Una vez que haya confirmado su cuenta a través del email de confirmación, [](iexcloud.io).
+* Una vez que haya confirmado su cuenta a través del email de confirmación, vaya a la [página de inicio](iexcloud.io).
 * Click API Tokens.
 * Copie la clave que aparece, debería comenzar con pk_.
 * In a terminal window within CS50 IDE, execute:
@@ -77,6 +77,13 @@ Para manejar más fácilmente las bases de datos vamos a usar un servicio de DBa
 * Vaya a la página de inicio de [mongodb atlas](https://www.mongodb.com/cloud/atlas) y haga click en start free.
 * Cree su cuenta, no use el correo del colegio.
 * Al iniciar sesión escoja la opción gratuita ![selección cluster](clusterType.PNG "selección cluster")
+* Deje las opciones que aparecen por defecto y haga click en el botón *create cluster*. Esperar a que se complete la creación del cluster.
+* Haga click en connect, luego en `Add a Different IP Address` ![añadir ip](addIPAddress.PNG "Añadir ip")
+* Luego ingrese la dirección IP `0.0.0.0` y haga click en Add Ip Address
+* Seleccione un nombre de usuario y una clave para iniciar sesión en la base de datos y haga click en Create MongoDB User,  luego en Choose a connection method.
+* Seleccione Connect your application ![Seleccionar metodo de conexión](methodOfConn.PNG "Seleccionar metodo de conexión")
+* Copie la cadena generada, y reemplace `<password>` por la contraseña escogida.
+* Pegue esta cadena en el archivo keys.js dentro de la carpeta config.
 ### Corriendo
 Inicie la aplicación con el comando `npm run dev`
 ### Entendiendo
