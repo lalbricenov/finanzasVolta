@@ -43,8 +43,8 @@ router.post('/login', function(req, res){
                 }
                 else{
                     // Compare password
-                    console.log(userInForm.password)
-                    console.log(userInDB.password)
+                    // console.log(userInForm.password)
+                    // console.log(userInDB.password)
                     bcrypt.compare(userInForm.password, userInDB.password, function(err, isMatch){
                         if(err){
                             errors.push({msg:"Se produjo un error"});
