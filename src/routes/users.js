@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-
 const User = require('../models/User');
 
 router.get('/', function(req, res){
@@ -14,9 +13,60 @@ router.get('/register', function(req, res){
     res.render("pages/register");
 });
 router.post('/login', function(req, res){
-    res.render("pages/login");
+    let userInForm = {
+        "email": req.body.email,
+        "password": req.body.password,
+    };
+    let errors = [];
+    
+    // Check required fields
+    if(!userInForm.email || !userInForm.password ){
+        errors.push({msg:"Por favor llene todos los campos"});
+    }
+    if(errors.length > 0)
+    {
+        res.render("pages/login", {errors:errors, user:userInForm});
+    }
+    else{
+        User.findOne( {'email':userInForm.email},"password" ,function(err, userInDB){
+            if(err)
+            {
+                console.log(err);
+                errors.push({msg:"Se produjo un error"});
+                res.render("pages/login", {errors:errors, user:userInForm});
+            }
+            else{
+                if(!userInDB) // Si el usuario no existe
+                {
+                    errors.push({msg:"Correo no registrado"});
+                    res.render("pages/login", {errors:errors, user:userInForm});
+                }
+                else{
+                    // Compare password
+                    console.log(userInForm.password)
+                    console.log(userInDB.password)
+                    bcrypt.compare(userInForm.password, userInDB.password, function(err, isMatch){
+                        if(err){
+                            errors.push({msg:"Se produjo un error"});
+                            res.render("pages/login", {errors:errors, user:userInForm});
+                        }
+                        if(isMatch){
+                            errors.push({msg:"Login exitoso"});
+                            res.render("pages/login", {errors:errors, user:userInForm});
+                        }
+                        else{
+                            errors.push({msg:"Contraseña incorrecta"});
+                            res.render("pages/login", {errors:errors, user:userInForm});
+                        }
+                    });
+                }
+            }
+        })
+    }
 });
 router.post('/register', function(req, res){
+    // console.log(req.body);
+    // req.body.name = sanitize(req.body.name);
     // console.log(req.body);
     let user = {
         "name": req.body.name,

@@ -3,7 +3,7 @@ const path = require("path");
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const favicon = require('serve-favicon');
-
+const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 
 // DB config and connection
@@ -27,6 +27,9 @@ app.use(morgan('dev'));
 // BODYPARSER es para leer los datos del cuerpo de la solicitud
 app.use(express.urlencoded({extended:false}));
 
+
+// SANITIZE USER INPUT
+app.use(mongoSanitize());
 //---------------------------------------------------------------------------------------------
 
 // CONFIGURATION OF VIEWS FOLDER AND VIEW ENGINE 
