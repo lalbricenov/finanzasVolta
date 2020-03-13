@@ -9,7 +9,7 @@ const app = express();
 // DB config and connection
 const db = require('./config/keys').MONGOURL
 mongoose.connect(db, {useNewUrlParser:true, useUnifiedTopology: true})
-    .then(db => console.log("Db connected"))
+    .then(db => console.log("Connected to atlas, Db name:", db.connections[0].name))
     .catch(err => console.log(err));
 
 

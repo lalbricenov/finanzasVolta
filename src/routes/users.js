@@ -24,7 +24,6 @@ router.post('/register', function(req, res){
         "password": req.body.password,
         "passwordConf": req.body.passwordConf
     };
-    console.log(user);
     let errors = [];
     
     // Check required fields
@@ -49,11 +48,12 @@ router.post('/register', function(req, res){
     }
     else{
         
-        User.findOne({email: user.email}, function(err, oldUser){
+        User.findOne({'email': user.email},'name', function(err, oldUser){
             if(oldUser)// Si ya habia un usuario con ese correo
             {
+                console.log(oldUser);
                 errors.push({msg:"El correo ya está registrado"});
-                res.render("pages/register", {errors:errors, user:oldUser});
+                res.render("pages/register", {errors:errors, user:user});
             }
             else
             {
@@ -63,33 +63,23 @@ router.post('/register', function(req, res){
                     bcrypt.hash(user.password, salt, function(err, hash){
                         // Guardar como contraseña el hash apenas creado
                         newUser.password = hash;
+                        console.log(newUser);
+                        newUser.save(function(error, user){
+                            if(error)
+                            {
+                                console.log(err);
+                                errors.push({msg:"Imposible realizar el registro"});
+                                res.render("pages/register", {errors:errors, user:user});
+                            }
+                            else
+                            {
+                                res.redirect('login');
+                            }
+                        })
                     });
                 });
-                newUser.save(function(error, user){
-                    if(error)
-                    {
-                        console.log(err);
-                        errors.push({msg:"Imposible realizar el registro"});
-                        res.render("pages/register", {errors:errors, user:oldUser});
-                    }
-                    else
-                    {
-                        res.redirect('login');
-                    }
-                })
-            }
-        })
-        let user = new User(user);
-        user.save(function(error, elem){
-            if(error)
-            {
-                // console.log("error a;adiendo", error)
-                errors.push({msg:"Imposible añadir a la base de datos"});
-                res.render("pages/register", {errors:errors, user:user});
-            }
-            else{
-                console.log(elem);
-                res.redirect("login");
+                
+                
             }
         })
     }
