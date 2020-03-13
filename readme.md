@@ -61,7 +61,7 @@ ACÁ FALTA PONER MÁS INFORMACIÓN
 Antes de comenzar con la tarea, necesitaremos registrarnos para obtener una clave API para poder consultar datos en IEX. Para hacerlo siga estos pasos:
 * Visite [iexcloud.io/cloud-login#/register/](iexcloud.io/cloud-login#/register/).
 * Ingrese su correo (no use el correo del colegio) y su contraseña, y haga click en "Create account".
-* Seleccione el plan gratuito ![selección plan IEX](IEX.PNG "Selección plan IEX")
+* Seleccione el plan gratuito ![selección plan IEX](documentation/IEX.PNG "Selección plan IEX")
 * Una vez que haya confirmado su cuenta a través del email de confirmación, vaya a la [página de inicio](iexcloud.io).
 * Click API Tokens.
 * Copie la clave que aparece, debería comenzar con pk_.
@@ -76,12 +76,12 @@ donde `value` es el valor pegado, sin espacios inmediatamente antes o después d
 Para manejar más fácilmente las bases de datos vamos a usar un servicio de DBaaS (DataBase As A Service).
 * Vaya a la página de inicio de [mongodb atlas](https://www.mongodb.com/cloud/atlas) y haga click en start free.
 * Cree su cuenta, no use el correo del colegio.
-* Al iniciar sesión escoja la opción gratuita ![selección cluster](clusterType.PNG "selección cluster")
+* Al iniciar sesión escoja la opción gratuita ![selección cluster](documentation/clusterType.PNG "selección cluster")
 * Deje las opciones que aparecen por defecto y haga click en el botón *create cluster*. Esperar a que se complete la creación del cluster.
-* Haga click en connect, luego en `Add a Different IP Address` ![añadir ip](addIPAddress.PNG "Añadir ip")
+* Haga click en connect, luego en `Add a Different IP Address` ![añadir ip](documentation/addIPAddress.PNG "Añadir ip")
 * Luego ingrese la dirección IP `0.0.0.0` y haga click en Add Ip Address
 * Seleccione un nombre de usuario y una clave para iniciar sesión en la base de datos y haga click en Create MongoDB User,  luego en Choose a connection method.
-* Seleccione Connect your application ![Seleccionar metodo de conexión](methodOfConn.PNG "Seleccionar metodo de conexión")
+* Seleccione Connect your application ![Seleccionar metodo de conexión](documentation/methodOfConn.PNG "Seleccionar metodo de conexión")
 * Copie la cadena generada, y reemplace `<password>` por la contraseña escogida.
 * Pegue esta cadena en el archivo keys.js dentro de la carpeta config.
 ### Corriendo
