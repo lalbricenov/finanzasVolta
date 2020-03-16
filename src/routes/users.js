@@ -2,17 +2,21 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require('../models/User');
+const auth = require('../auth');
 
 router.get('/', function(req, res){
     res.redirect("/");
 });
-router.get('/login', function(req, res){
+router.get('/login', auth.redirectHome,function(req, res){//If there is a session active, redirect to home page
+    console.log(req.session);
     res.render("pages/login");
 });
-router.get('/register', function(req, res){
+router.get('/register', auth.redirectHome, function(req, res){
+    console.log(req.session);
     res.render("pages/register");
 });
-router.post('/login', function(req, res){
+router.post('/login', auth.redirectHome, function(req, res){
+    console.log(req.session);
     let userInForm = {
         "email": req.body.email,
         "password": req.body.password,
@@ -28,7 +32,7 @@ router.post('/login', function(req, res){
         res.render("pages/login", {errors:errors, user:userInForm});
     }
     else{
-        User.findOne( {'email':userInForm.email},"password" ,function(err, userInDB){
+        User.findOne( {'email':userInForm.email.trim().toLowerCase()},"password" ,function(err, userInDB){
             if(err)
             {
                 console.log(err);
@@ -51,8 +55,11 @@ router.post('/login', function(req, res){
                             res.render("pages/login", {errors:errors, user:userInForm});
                         }
                         if(isMatch){
-                            errors.push({msg:"Login exitoso"});
-                            res.render("pages/login", {errors:errors, user:userInForm});
+                            // errors.push({msg:"Login exitoso"});
+                            // If the login is successful
+                            req.session.userId = userInDB.id;
+                            res.redirect("/");
+                            // res.render("/", {errors:errors, user:userInForm});
                         }
                         else{
                             errors.push({msg:"Contraseña incorrecta"});
@@ -64,7 +71,7 @@ router.post('/login', function(req, res){
         })
     }
 });
-router.post('/register', function(req, res){
+router.post('/register', auth.redirectHome, function(req, res){
     // console.log(req.body);
     // req.body.name = sanitize(req.body.name);
     // console.log(req.body);
@@ -98,7 +105,7 @@ router.post('/register', function(req, res){
     }
     else{
         
-        User.findOne({'email': user.email},'name', function(err, oldUser){
+        User.findOne({'email': user.email.trim().toLowerCase()},'name', function(err, oldUser){
             if(oldUser)// Si ya habia un usuario con ese correo
             {
                 console.log(oldUser);
@@ -108,6 +115,7 @@ router.post('/register', function(req, res){
             else
             {
                 let newUser = new User(user);
+                newUser.email = newUser.email.trim().toLowerCase();
                 // hash password en 2 pasos: generar salt, hacer hash
                 bcrypt.genSalt(10, function(err, salt){
                     bcrypt.hash(user.password, salt, function(err, hash){
@@ -136,5 +144,13 @@ router.post('/register', function(req, res){
     
 });
 
-
+router.post('/logout', auth.redirectLogin, function(req, res){
+    req.session.destroy(function(err){
+        if(err){
+            return res.redirect('/');
+        }
+        res.clearCookie('sid');
+        res.redirect('/users/login');
+    })
+})
 module.exports = router;
