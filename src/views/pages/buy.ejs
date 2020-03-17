@@ -1,0 +1,44 @@
+<%- include('../partials/headerWNav'); %>
+<style>
+
+    #formForCardN1{
+        /* justify-items: center; */
+        border: solid 2px lightgray;
+        border-radius: 5px;
+        padding:30px;
+    }
+
+    
+    </style>
+    <div class="smallCentered">    
+        <form action="comprar" method="post" id="formForCardN1">
+            <div class="infoInForm">
+                <h2>Comprar</h2>
+            </div>
+            <% if(typeof errors != 'undefined')for(error of errors) {%> 
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <%= error.msg %> 
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                <% } %> 
+            <div>
+                <div class="form-group">
+                <label for="symbol">Símbolo
+                </label>
+                <input type="text" class="form-control" id="symbol" name="symbol" required>
+                </div>
+                <div class="form-group">
+                <div class="form-group">
+                    <label for="numAcciones">Número de acciones
+                    </label>
+                    <input type="number" min="1" class="form-control" id="numAcciones" name="numAcciones" required>
+                    </div>
+                <div class="form-group">
+                <button type="submit" class="btn btn-primary">Comprar</button>
+            </div>
+          </form>
+    </div>
+     
+<%- include('../partials/footer'); %>
