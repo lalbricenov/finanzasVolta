@@ -6,8 +6,13 @@ const TransactionSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    isSell:{
+        type: Boolean,
+        required: true
+    },
     symbol:{
-        type: String, 
+        type: String,
+        uppercase: true,
         required: true
     },
     valorPorAccion:{
@@ -15,11 +20,15 @@ const TransactionSchema = new mongoose.Schema({
         min:0, 
         required: true
     },
-    numAcciones:{
+    cambioNumAcciones:{
         type: Number,
-        required: true
+        required: true,
+        validate : {
+            validator : Number.isInteger,
+            message   : '{VALUE} is not an integer value'
+        }
     },
-    valorTotal:{
+    cambioSaldoDinero:{
         type:Number,
         required:true
     },

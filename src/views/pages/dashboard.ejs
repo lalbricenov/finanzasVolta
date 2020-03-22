@@ -1,5 +1,34 @@
 <%- include('../partials/headerWNav'); %>
-<table class="table">
-    <tr><th>Símbolo</th> <th>Nombre</th> <th>Acciones</th> <th>Valor</th><th>Total</th></tr>
+<table class="table table-striped">
+    <tr>
+        <th>Símbolo</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+        <th>Valor</th>
+        <th>TOTAL</th>
+    </tr>
+    <% for(stock of portafolio.stocks){ %>
+        <tr>
+            <td><%= stock.symbol%></td>
+            <td><%= stock.name%></td>
+            <td><%= stock.numAcciones%></td>
+            <td><%= formatCurrency(stock.valorPorAccion) %>  </td>
+            <td><%= formatCurrency(stock.valorTotal) %>  </td>
+        </tr>
+        <% } %>  
+    <tr>
+        <td>CASH</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><%= formatCurrency(portafolio.cash) %> </td>
+    </tr>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th><%= formatCurrency(portafolio.total) %> </th>
+    </tr>
 </table>    
 <%- include('../partials/footer'); %>

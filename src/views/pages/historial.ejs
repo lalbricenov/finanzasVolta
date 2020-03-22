@@ -1,0 +1,27 @@
+<%- include('../partials/headerWNav'); %>
+<% if(transactions.length > 0){%> 
+<table class="table">
+    <tr>
+        <th>Tipo</th>
+        <th>Símbolo</th>
+        <th>Valor por acción</th>
+        <th>Acciones</th>
+        <th>Valor total</th>
+        <th>Fecha y hora</th>
+    </tr>
+    <% for(transaction of transactions){ %>
+        <tr class=<%= transaction.isSell?"table-danger":"table-success"%> >
+            <td><%= transaction.isSell? "Venta":"Compra" %></td>
+            <td><%= transaction.symbol %>  </td>
+            <td><%= formatCurrency(transaction.valorPorAccion) %>  </td>
+            <td><%= Math.abs(transaction.cambioNumAcciones) %>  </td>
+            <td><%= formatCurrency(Math.abs(transaction.cambioSaldoDinero)) %>  </td>
+            <td><%= transaction.date %>  </td>
+        </tr>
+    <% } %>  
+</table>    
+<% }else{ %>
+    <p>Aquí aparecerán todas tus transacciones. </p>
+    
+<% } %> 
+<%- include('../partials/footer'); %>

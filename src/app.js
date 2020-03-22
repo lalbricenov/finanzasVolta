@@ -68,8 +68,9 @@ app.use('/',indexRoutes);// login required
 
 //----------------------------LOCALS: helper functions -------------------------------------
 
-// app.locals = require('./static/js/creditCard');
-
+app.locals.formatCurrency = function(value) {
+    return "US$" + value.toFixed(2);
+  }
 
 // SETTING PORT AND STARTING APP --------------------------------------------------------------
 // This is the port that will be used for the server. process.env.PORT will be used if available, otherwise 3000 will be selected.
