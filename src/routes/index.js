@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../auth');
-const quote = require('../quote');
-const Transaction = require('../models/Transaction');
+const cotizar = require('../cotizar');
 const mongoose = require('mongoose');
+const Transaction = require('../models/Transaction');
 const ObjectId = mongoose.Types.ObjectId;
 
 router.get('/', auth.redirectLogin, function(req, res){
-    // let errors = []
+    let errors = []
     console.log(req.session)
     Transaction.aggregate([
         {$match:{"userId":ObjectId(req.session.userId)}},
@@ -15,48 +15,72 @@ router.get('/', auth.redirectLogin, function(req, res){
             _id:{"symbol":"$symbol"},
             valorTransacciones:{$sum:"$cambioSaldoDinero"},
             totalAcciones:{$sum:"$cambioNumAcciones"}
-        }}
-    ], function(err, results){
+            }
+        },
+        {$sort:{totalAcciones:-1}},
+        {$match:{"totalAcciones":{$gt:0}}}
+    ], async function(err, accionesPortafolio){
         if(err) return req.res.send(err);
         else{
             let portafolio = {cash:10000, total:0, stocks:[]};
-            if(results.length > 0)
+            if(accionesPortafolio.length > 0)
             {
-                for(result of results){
-                    portafolio.cash = portafolio.cash + result.valorTransacciones;
-                    let stock = {
-                        symbol:result._id.symbol,
-                        name:"Este es el nombre",
-                        numAcciones:result.totalAcciones,
-                        valorPorAccion:105,// se debe determinar 
-                        valorTotal:105*result.totalAcciones
-                    }
-                    portafolio.total += stock.valorTotal;
-                    portafolio.stocks.push(stock);
+                for(accion of accionesPortafolio){
+                    
+                    portafolio.cash = portafolio.cash + accion.valorTransacciones;
+                    cotizacion = await cotizar(accion._id.symbol);
+                    if (!(cotizacion === undefined))
+                    {// Si se tuvo éxito en la cotización
+                                            
+                        let stock = {
+                            symbol:cotizacion.symbol,
+                            name:cotizacion.name,
+                            numAcciones:accion.totalAcciones,
+                            valorPorAccion:cotizacion.price,
+                            valorTotal:cotizacion.price*accion.totalAcciones
+                        }
+                        portafolio.total += stock.valorTotal;
+                        portafolio.stocks.push(stock);
+                    }else{
+                        let error = {msg:`Imposible cotizar el símbolo ${accion._id.symbol}`};
+                        errors.push(error);
+                    }                  
+                    
                 }
                 // console.log(portafolio)
             }
             portafolio.total += portafolio.cash;
-            res.render('pages/dashboard', {portafolio:portafolio});
+            res.render('pages/dashboard', {portafolio:portafolio, errors:errors});
         }
         
     })
     
 });
 router.get('/cotizar', auth.redirectLogin, function(req, res){
-    let resp;
-    quote('aapl').then(function(ans){
-        resp = ans;
-        res.send(resp);
-    });
-    
+    res.render("pages/cotizar.ejs");
+})
+router.post('/cotizar', auth.redirectLogin, async function(req, res){
+    let errors = [];
+    if(!req.body.symbol){
+        errors.push({msg:"Debe ingresar el símbolo a consultar"});
+        res.render("pages/cotizar.ejs", {errors:errors});
+    }else{
+        let cotizacion = await cotizar(req.body.symbol);
+        if (!(cotizacion === undefined)){
+            errors.push({msg:`Una acción de ${cotizacion.name} cuesta ${req.app.locals.formatCurrency(cotizacion.price)}`});
+            res.render("pages/cotizar.ejs", {errors:errors});
+        }else{
+            errors.push({msg:"Símbolo no encontrado"});
+            res.render("pages/cotizar.ejs", {errors:errors});
+        }
+    }
 });
 router.get('/comprar', auth.redirectLogin, function(req, res){
-    console.log(req.session);
+    // console.log(req.session);
     res.render('pages/buy');
 });
-router.post('/comprar', auth.redirectLogin, function(req, res){
-    console.log(req.body);
+router.post('/comprar', auth.redirectLogin, async function(req, res){
+    //console.log(req.body);
     let errors = [];
     let symbol = req.body.symbol;
     let numAcciones = parseFloat(req.body.numAcciones);
@@ -72,7 +96,13 @@ router.post('/comprar', auth.redirectLogin, function(req, res){
         return res.render("pages/buy", {errors:errors});
     }
     else{
-        let unitPrice = 100;// Implement functionality to query the API to get the cost
+        symbol = symbol.toUpperCase();
+        let cotizacion = await cotizar(symbol);
+        if (cotizacion === undefined){
+            errors.push({msg:"Símbolo no encontrado"});
+            return res.render("pages/buy", {errors:errors});
+        }
+        let unitPrice = cotizacion.price;
         let valorCompra = unitPrice * numAcciones;
         
         // Verificación de que el usuario tenga sufiente dinero para hacer la transacción
@@ -87,14 +117,14 @@ router.post('/comprar', auth.redirectLogin, function(req, res){
             }
             else{
                 let saldo = 10000;
-                console.log(result);
+                //console.log(result);
                 if(result.length > 0)
                 {
                     saldo = saldo + result[0].cambioSaldo;
                 }     
                 
                 // console.log(transactions);
-                console.log(saldo);
+                //console.log(saldo);
                 if(saldo >= valorCompra)
                 {
                     let newTransaction = new Transaction();
@@ -107,7 +137,7 @@ router.post('/comprar', auth.redirectLogin, function(req, res){
                     // console.log(newTransaction);
                     newTransaction.save(function(err, transaction){
                         if(err){
-                            console.log(err);
+                            //console.log(err);
                             errors.push({msg:"Imposible realizar la transacción"});
                             res.render("pages/buy", {errors:errors});
                         }
@@ -133,7 +163,7 @@ router.get('/vender', auth.redirectLogin, function(req, res){
 });
 
 router.post('/vender', auth.redirectLogin, function(req, res){
-    console.log(req.body);
+    //console.log(req.body);
     let errors = [];
     let symbol = req.body.symbol;
     let numAcciones = parseFloat(req.body.numAcciones);
@@ -149,17 +179,18 @@ router.post('/vender', auth.redirectLogin, function(req, res){
         return res.render("pages/sell", {errors:errors});
     }
     else{
+        symbol = symbol.toUpperCase();
         Transaction.aggregate([
             {$match:{symbol:symbol, "userId":ObjectId(req.session.userId)}},
             {$group:{ _id:null, saldoNumAcciones:{$sum:"$cambioNumAcciones"}}}
-        ], function(err, result){
+        ], async function(err, result){
             if(err){
                 // console.log("aqui" + err)
                 errors.push({msg:"Imposible realizar la transacción"});
                 res.render("pages/sell", {errors:errors});
             }
             else{
-                console.log(result);
+                //console.log(result);
                 let numAccionesActuales;
                 if(result.length == 0)
                 {
@@ -167,16 +198,21 @@ router.post('/vender', auth.redirectLogin, function(req, res){
                 }else{
                     numAccionesActuales = result[0].saldoNumAcciones;
                 }
-                console.log(result);
+                //console.log(result);
                 
                 // Si el usuario sí posee suficientes acciones
                 if(numAccionesActuales >= numAcciones)
                 {
-                    let unitPrice = 100;// Implement functionality to query the API to get the cost
+                    let cotizacion = await cotizar(symbol);
+                    if (cotizacion === undefined){
+                        errors.push({msg:"Símbolo no encontrado"});
+                        return res.render("pages/sell", {errors:errors});
+                    }
+                    let unitPrice = cotizacion.price;
                     let newTransaction = new Transaction();
                     newTransaction.valorPorAccion = unitPrice;
                     newTransaction.cambioNumAcciones = -numAcciones;
-                    newTransaction.cambioSaldoDinero = numAcciones * unitPrice;//El usuario gasta dinero al comprar
+                    newTransaction.cambioSaldoDinero = numAcciones * unitPrice;//El usuario gasta dinero al comprar y recibe al vender
                     newTransaction.userId = req.session.userId;
                     newTransaction.symbol = req.body.symbol;
                     newTransaction.isSell = true;// Si no es una venta, entonces es una compra
@@ -186,12 +222,12 @@ router.post('/vender', auth.redirectLogin, function(req, res){
             
                     newTransaction.save(function(err, transaction){
                         if(err){
-                            console.log(err);
+                            //console.log(err);
                             errors.push({msg:"Imposible realizar la transacción"});
                             res.render("pages/sell", {errors:errors});
                         }
                         else{
-                            console.log(transaction);
+                            //console.log(transaction);
                             res.redirect('/');
                         }
                         

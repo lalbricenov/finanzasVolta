@@ -1,19 +1,16 @@
 <%- include('../partials/headerWNav'); %>
 <style>
-
-#formForCardN1{
-    /* justify-items: center; */
-    border: solid 2px lightgray;
-    border-radius: 5px;
-    padding:30px;
-}
-
-
+    #formForCardN1{
+        /* justify-items: center; */
+        border: solid 2px lightgray;
+        border-radius: 5px;
+        padding:30px;
+    }
 </style>
 <div class="smallCentered">    
-    <form action="comprar" method="post" id="formForCardN1">
+    <form action="cotizar" method="post" id="formForCardN1">
         <div class="infoInForm">
-            <h2>Comprar</h2>
+            <h2>Cotizar</h2>
         </div>
         <% if(typeof errors != 'undefined')for(error of errors) {%> 
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -29,13 +26,9 @@
             </label>
             <input type="text" class="form-control" id="symbol" name="symbol" required>
         </div>
-        <div class="form-group">
-            <label for="numAcciones">Número de acciones
-            </label>
-            <input type="number" min="1" class="form-control" id="numAcciones" name="numAcciones" required>
-        </div>
-            
-        <button type="submit" class="btn btn-primary">Comprar</button>
+
+        <button type="submit" class="btn btn-primary">Cotizar</button>
+
     </form>
 </div>
     

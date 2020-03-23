@@ -1,10 +1,18 @@
 <%- include('../partials/headerWNav'); %>
+<% if(typeof errors != 'undefined')for(error of errors) {%> 
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <%= error.msg %> 
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<% } %> 
 <table class="table table-striped">
     <tr>
         <th>Símbolo</th>
-        <th>Nombre</th>
+        <th>Nombre Empresa</th>
         <th>Acciones</th>
-        <th>Valor</th>
+        <th>Precio Actual</th>
         <th>TOTAL</th>
     </tr>
     <% for(stock of portafolio.stocks){ %>
