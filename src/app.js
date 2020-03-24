@@ -19,15 +19,13 @@ mongoose.connect(db, {useNewUrlParser:true, useUnifiedTopology: true})
 const IN_PROD = (process.env.NODE_ENV === 'production');// this is set on the operating system
 app.use(session({
     name:'sid',
-    resave:'false',
+    resave: false,
     saveUninitialized: false,
     secret:'This!s 4 secretV0lt4*',
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    cookie:{
-        maxAge:1000*60*59,//1 hora
-        sameSite: true,
-        secure: IN_PROD
-    }
+    store: new MongoStore({ 
+        mongooseConnection: mongoose.connection,
+        touchAfter:24*3600
+     })
 }))
 
 console.log(IN_PROD);
