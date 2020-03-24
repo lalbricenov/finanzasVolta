@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const favicon = require('serve-favicon');
 const mongoSanitize = require('express-mongo-sanitize');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session); 
 const app = express();
 const keys  = require('./config/keys');
 
@@ -21,8 +22,9 @@ app.use(session({
     resave:'false',
     saveUninitialized: false,
     secret:'This!s 4 secretV0lt4*',
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
     cookie:{
-        maxAge:1000*60*60,//1 hora
+        maxAge:1000*60*59,//1 hora
         sameSite: true,
         secure: IN_PROD
     }
