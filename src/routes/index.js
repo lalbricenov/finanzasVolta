@@ -96,7 +96,7 @@ router.post('/comprar', auth.redirectLogin, async function(req, res){
         return res.render("pages/buy", {errors:errors});
     }
     else{
-        symbol = symbol.toUpperCase();
+        symbol = symbol.toUpperCase().trim();
         let cotizacion = await cotizar(symbol);
         if (cotizacion === undefined){
             errors.push({msg:"Símbolo no encontrado"});
@@ -179,7 +179,7 @@ router.post('/vender', auth.redirectLogin, function(req, res){
         return res.render("pages/sell", {errors:errors});
     }
     else{
-        symbol = symbol.toUpperCase();
+        symbol = symbol.toUpperCase().trim();
         Transaction.aggregate([
             {$match:{symbol:symbol, "userId":ObjectId(req.session.userId)}},
             {$group:{ _id:null, saldoNumAcciones:{$sum:"$cambioNumAcciones"}}}
