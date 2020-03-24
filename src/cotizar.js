@@ -56,6 +56,7 @@ const cotizar = async function(symbol){
 
     if(company === null || company === undefined)// si no se encontró la compañía en la base de datos
     {
+        let quote;
         try{
             quote = await cotizarFull(symbol);// Se debe usar una cotización que incluya el nombre de la compañía
         } catch (error) {
