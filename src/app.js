@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const morgan = require('morgan');
 const mongoose = require('mongoose');
 const favicon = require('serve-favicon');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -27,7 +28,7 @@ app.use(session({
     }
 }))
 
-
+console.log(IN_PROD);
 
 // ICÓNO QUE APARECE EN LA PESTAÑA DEL NAVEGADOR
 app.use(favicon(path.join(__dirname,'static','favicon.ico')));
@@ -38,11 +39,7 @@ app.use('/static', express.static(__dirname + '/static'));
 
 // MIDDLEWARE ---------------------------------------------------------------------------------
 // morgan dev is a set of middlewares that log the request in the terminal during development.
-let morgan;
-if(IN_PROD){
-    morgan = require('morgan');
-    app.use(morgan('dev'));
-} 
+app.use(morgan('dev'));
 
 // BODYPARSER es para leer los datos del cuerpo de la solicitud
 app.use(express.urlencoded({extended:false}));
