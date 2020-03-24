@@ -56,7 +56,12 @@ const cotizar = async function(symbol){
 
     if(company === null || company === undefined)// si no se encontró la compañía en la base de datos
     {
-        quote = await cotizarFull(symbol);// Se debe usar una cotización que incluya el nombre de la compañía
+        try{
+            quote = await cotizarFull(symbol);// Se debe usar una cotización que incluya el nombre de la compañía
+        } catch (error) {
+            console.log("Error en cotizarFull", error);
+            return undefined
+        }
         if(quote === undefined || quote.name === undefined)// si no se pudo obtener la cotización de IEX, o está incompleta
         {
             return quote;
@@ -78,7 +83,13 @@ const cotizar = async function(symbol){
     else
     {   
         // Si la compañía ya está en la base de datos de la aplicación
-        quote = await cotizarFree(symbol);// Price and symbol from the IEX api for free
+        try {
+            quote = await cotizarFree(symbol);// Price and symbol from the IEX api for free    
+        } catch (error) {
+            console.log("Error en cotizarFree", error);
+            return undefined
+        }
+        
         if(quote === undefined)// si no se pudo obtener la cotización de IEX
         {
             return quote
