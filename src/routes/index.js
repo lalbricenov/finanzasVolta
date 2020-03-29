@@ -17,9 +17,10 @@ router.get('/', auth.redirectLogin, function(req, res){
             totalAcciones:{$sum:"$cambioNumAcciones"}
             }
         },
-        {$sort:{totalAcciones:-1}},
-        {$match:{"totalAcciones":{$gt:0}}}
+        {$sort:{totalAcciones:-1}}/*,
+    {$match:{"totalAcciones":{$gt:0}}}*/
     ], async function(err, accionesPortafolio){
+        console.log("Portafolio Acciones: ", accionesPortafolio);
         if(err) return req.res.send(err);
         else{
             let portafolio = {cash:10000, total:0, stocks:[]};
@@ -28,23 +29,26 @@ router.get('/', auth.redirectLogin, function(req, res){
                 for(accion of accionesPortafolio){
                     
                     portafolio.cash = portafolio.cash + accion.valorTransacciones;
-                    cotizacion = await cotizar(accion._id.symbol);
-                    if (!(cotizacion === undefined))
-                    {// Si se tuvo éxito en la cotización
-                                            
-                        let stock = {
-                            symbol:cotizacion.symbol,
-                            name:cotizacion.name,
-                            numAcciones:accion.totalAcciones,
-                            valorPorAccion:cotizacion.price,
-                            valorTotal:cotizacion.price*accion.totalAcciones
-                        }
-                        portafolio.total += stock.valorTotal;
-                        portafolio.stocks.push(stock);
-                    }else{
-                        let error = {msg:`Imposible cotizar el símbolo ${accion._id.symbol}`};
-                        errors.push(error);
-                    }                  
+                    if(accion.totalAcciones > 0)
+                    {
+                        cotizacion = await cotizar(accion._id.symbol);
+                        if (!(cotizacion === undefined))
+                        {// Si se tuvo éxito en la cotización
+                                                
+                            let stock = {
+                                symbol:cotizacion.symbol,
+                                name:cotizacion.name,
+                                numAcciones:accion.totalAcciones,
+                                valorPorAccion:cotizacion.price,
+                                valorTotal:cotizacion.price*accion.totalAcciones
+                            }
+                            portafolio.total += stock.valorTotal;
+                            portafolio.stocks.push(stock);
+                        }else{
+                            let error = {msg:`Imposible cotizar el símbolo ${accion._id.symbol}`};
+                            errors.push(error);
+                        }                  
+                    }
                     
                 }
                 // console.log(portafolio)
